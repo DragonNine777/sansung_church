@@ -22,12 +22,12 @@ export default function WorshipPage() {
                 <ClockIcon className="text-brand-600" width={22} height={22} /> {group.title}
               </h2>
               <div className="mt-5 overflow-x-auto rounded-2xl border border-line">
-                <table className="w-full text-left">
+                <table className="w-full table-fixed text-left">
                   <thead className="bg-paper text-sm text-muted">
                     <tr>
-                      <th scope="col" className="px-5 py-3.5 font-semibold sm:px-6">예배</th>
-                      <th scope="col" className="px-5 py-3.5 text-right font-semibold sm:px-6 sm:text-left">시간</th>
-                      <th scope="col" className="hidden px-6 py-3.5 font-semibold sm:table-cell">비고</th>
+                      <th scope="col" className="px-5 py-3.5 font-semibold sm:w-[40%] sm:px-6">예배</th>
+                      <th scope="col" className="w-36 px-5 py-3.5 text-right font-semibold sm:w-[30%] sm:px-6 sm:text-left">시간</th>
+                      <th scope="col" className="hidden px-6 py-3.5 font-semibold sm:table-cell sm:w-[30%]">비고</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-line">
