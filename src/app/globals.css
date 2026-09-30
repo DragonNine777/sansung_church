@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@theme {
+  /* 로고 블루 · 그린에서 가져온 색 */
+  --color-brand-50: #eef4fd;
+  --color-brand-100: #d9e6fa;
+  --color-brand-200: #b3cdf4;
+  --color-brand-500: #2e6fd6;
+  --color-brand-600: #1f55bd;
+  --color-brand-700: #1a4499;
+  --color-brand-900: #0f2656;
+  --color-leaf-50: #f0f8ec;
+  --color-leaf-500: #4dae3a;
+  --color-leaf-700: #2f7a22;
+
+  --color-ink: #16213a;
+  --color-body: #3d4760;
+  --color-muted: #5f6b82;
+  --color-line: #e3e8f0;
+  --color-paper: #f7f9fc;
+
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+    "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-serif: var(--font-noto-serif-kr), "Nanum Myeongjo", serif;
+
+  --animate-rise: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: #ffffff;
+    color: var(--color-body);
+    font-family: var(--font-sans);
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
+  h1, h2, h3 {
+    color: var(--color-ink);
+    text-wrap: balance;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-brand-500);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
