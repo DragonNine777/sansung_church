@@ -66,7 +66,7 @@ export default function AboutPage() {
             <h2 className="mt-3 font-serif text-2xl leading-snug font-bold text-white md:text-3xl">
               순결한 신부의 세대,
               <br />
-              열방을 비추는 이방의 빛
+              열방을 비추는 산성의 빛
             </h2>
             <p className="mt-5 leading-loose text-white/85">
               그리스도의 십자가 복음을 열방에 전하여 이방의 빛이 되는 것, 이것이 {church.name}가 품은 비전입니다.

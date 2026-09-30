@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { SVGProps } from "react";
 
 type IconProps = SVGProps<SVGSVGElement>;
@@ -94,11 +95,13 @@ export const YoutubeIcon = (p: IconProps) => (
   </svg>
 );
 
-// 산성의빛교회 심볼: 파랑·초록 두 면과 흰 십자가
-export const LogoMark = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 40 44" className={className} aria-hidden="true">
-    <path d="M2 6 20 2v40L2 38Z" fill="#2E8BE0" />
-    <path d="M20 2l18 4v32l-18 4Z" fill="#4DAE3A" />
-    <path d="M18.4 11h3.2v6.2h5.2v3.2h-5.2V34h-3.2V20.4h-5.2v-3.2h5.2Z" fill="#fff" />
+export const BookOpenIcon = (p: IconProps) => (
+  <svg {...base(p)}>
+    <path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2ZM22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7Z" />
   </svg>
+);
+
+// 산성의빛교회 로고 (public/images/logo.png)
+export const LogoMark = ({ className }: { className?: string }) => (
+  <Image src="/images/logo.png" alt="" width={160} height={160} priority className={className} />
 );

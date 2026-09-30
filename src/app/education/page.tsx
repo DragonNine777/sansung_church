@@ -37,22 +37,24 @@ export default function EducationPage() {
               </div>
               <div className="p-8 md:p-10">
                 <p className="text-[17px] leading-loose">{m.description}</p>
-                <ul className="mt-6 flex flex-wrap gap-3">
-                  {m.links.map((l) => (
-                    <li key={l.href}>
-                      <a
-                        href={l.href}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line px-5 text-[15px] font-semibold text-ink transition-colors hover:border-brand-200 hover:text-brand-600"
-                      >
-                        {l.type === "instagram" ? <InstagramIcon /> : <YoutubeIcon />}
-                        {l.label}
-                        <ExternalIcon width={14} height={14} className="text-muted" />
-                      </a>
-                    </li>
-                  ))}
-                </ul>
+                {m.links.length > 0 && (
+                  <ul className="mt-6 flex flex-wrap gap-3">
+                    {m.links.map((l) => (
+                      <li key={l.href}>
+                        <a
+                          href={l.href}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line px-5 text-[15px] font-semibold text-ink transition-colors hover:border-brand-200 hover:text-brand-600"
+                        >
+                          {l.type === "instagram" ? <InstagramIcon /> : <YoutubeIcon />}
+                          {l.label}
+                          <ExternalIcon width={14} height={14} className="text-muted" />
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             </article>
           ))}

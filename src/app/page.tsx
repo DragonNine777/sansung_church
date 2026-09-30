@@ -35,7 +35,7 @@ export default async function Home() {
             <h1 className="mt-4 font-serif text-4xl leading-tight font-bold text-white md:text-6xl md:leading-[1.15]">
               열방을 비추는
               <br />
-              이방의 빛
+              산성의 빛
             </h1>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-white/85 md:text-lg">
               순결한 신부의 세대가 되어 그리스도의 십자가 복음을 전하는 교회,
@@ -102,12 +102,15 @@ export default async function Home() {
             </div>
             <div className="rounded-2xl border border-line bg-white p-6 md:p-9">
               <h3 className="flex items-center gap-2 text-lg font-bold">
-                <ClockIcon className="text-brand-600" /> 주중 · 다음 세대
+                <ClockIcon className="text-brand-600" /> 주중 · 교회학교
               </h3>
               <ul className="mt-6 divide-y divide-line">
                 {weekday.map((s) => (
                   <li key={s.name} className="flex items-center justify-between py-3.5">
-                    <span className="font-medium text-ink">{s.name}</span>
+                    <span className="font-medium text-ink">
+                      {s.name}
+                      {s.note && <span className="ml-2 text-sm font-normal text-muted">{s.note}</span>}
+                    </span>
                     <span className="text-lg font-semibold text-brand-600 tabular-nums">{s.time}</span>
                   </li>
                 ))}
@@ -177,7 +180,7 @@ export default async function Home() {
       <section className="bg-white py-16 md:py-24">
         <Container>
           <SectionTitle eyebrow="NEXT GENERATION" title="다음 세대" action={<MoreLink href="/education">교회학교 안내</MoreLink>} />
-          <div className="grid gap-5 md:grid-cols-2">
+          <div className="grid gap-5 md:grid-cols-3">
             {ministries.map((m) => (
               <Link
                 key={m.id}

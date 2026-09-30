@@ -61,7 +61,7 @@ export const campuses: Campus[] = [
     id: "seongnam",
     name: "성남 성전",
     address: "경기 성남시 중원구 둔촌대로413번길 42-1",
-    phone: "031-748-5329",
+    phone: "070-4102-0675",
   },
   {
     id: "gwangju",
@@ -81,23 +81,56 @@ export const serviceGroups: { title: string; services: Service[] }[] = [
   {
     title: "주일예배",
     services: [
-      { name: "주일 1부 예배", time: "오전 8:45" },
-      { name: "주일 2부 예배", time: "오전 10:45" },
-      { name: "주일 광주 예배", time: "오전 10:45", note: "광주 성전" },
-      { name: "주일 오후 예배", time: "오후 2:20" },
+      { name: "주일 1부 예배", time: "오전 9:00" },
+      { name: "주일 2부 예배", time: "오전 11:00" },
+      { name: "주일 오전예배", time: "오전 11:00", note: "광주 성전" },
+      { name: "주일 찬양예배", time: "오후 2:30" },
     ],
   },
   {
     title: "주중 예배",
     services: [
-      { name: "수요예배", time: "오후 6:45" },
-      { name: "금요기도회", time: "오후 9:20" },
-      { name: "새벽기도", time: "오전 5:00" },
+      { name: "수요예배", time: "오후 7:00" },
+      { name: "새벽기도회", time: "오전 5:00", note: "매일" },
+      { name: "금요심야기도회", time: "오후 9:30", note: "금요일" },
     ],
   },
   {
-    title: "다음 세대",
-    services: [{ name: "교회학교 · 청년부 예배", time: "주일 오후 1:00" }],
+    title: "교회학교",
+    services: [
+      { name: "예꼬마을", time: "오전 11:00", note: "주일" },
+      { name: "예꿈마을", time: "오전 10:30", note: "주일" },
+      { name: "주일 중고청 예배", time: "오후 1:00", note: "주일" },
+    ],
+  },
+];
+
+// 예꿈도서관
+export const library = { name: "예꿈도서관", hours: "월~금 오후 2:00 ~ 9:00" };
+
+// 제자훈련 과정
+export const discipleship: { level: string; courses: { name: string; period: string }[] }[] = [
+  {
+    level: "제자훈련 초급",
+    courses: [
+      { name: "바나바", period: "4주" },
+      { name: "확신반", period: "5주" },
+      { name: "교리학교", period: "8주" },
+      { name: "중보기도학교", period: "3주" },
+      { name: "열린모임", period: "자체적" },
+      { name: "셀모임", period: "자체적" },
+    ],
+  },
+  {
+    level: "제자훈련 고급",
+    courses: [
+      { name: "양육반", period: "12주" },
+      { name: "제자훈련", period: "12주" },
+      { name: "군사훈련", period: "12주" },
+      { name: "재생산훈련", period: "12주" },
+      { name: "치유수련회", period: "분기별" },
+      { name: "선교학교", period: "3주" },
+    ],
   },
 ];
 
@@ -109,12 +142,21 @@ export const social = {
 
 export const ministries = [
   {
+    id: "yekko",
+    name: "예꼬마을",
+    subtitle: "교회학교",
+    description:
+      "말씀과 찬양 안에서 아이들이 예수님을 만나고 믿음의 첫걸음을 내딛는 교회학교입니다.",
+    time: "주일 오전 11:00",
+    links: [] as { type: "instagram" | "youtube"; label: string; href: string }[],
+  },
+  {
     id: "yekkum",
     name: "예꿈마을",
     subtitle: "교회학교",
     description:
       "예수님의 꿈을 품고 자라는 아이들의 마을입니다. 말씀과 찬양, 따뜻한 교제 가운데 믿음의 기초를 세워 갑니다.",
-    time: "주일 오후 1:00",
+    time: "주일 오전 10:30",
     links: [
       { type: "instagram" as const, label: "@jesus_dream_world", href: "https://www.instagram.com/jesus_dream_world/" },
     ],
@@ -122,7 +164,7 @@ export const ministries = [
   {
     id: "adelphos",
     name: "아델포스",
-    subtitle: "청년회",
+    subtitle: "중고청 · 청년회",
     description:
       "‘형제’라는 뜻의 아델포스는 복음 안에서 한 가족 된 청년들의 공동체입니다. 함께 예배하고 삶을 나누며 소명을 발견해 갑니다.",
     time: "주일 오후 1:00",

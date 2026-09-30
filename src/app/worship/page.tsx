@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
-import { campuses, serviceGroups } from "@/data/church";
+import { campuses, discipleship, library, serviceGroups } from "@/data/church";
 import { Container, MoreLink, PageHero } from "@/components/ui";
-import { ClockIcon, MapPinIcon } from "@/components/icons";
+import { BookOpenIcon, ClockIcon, MapPinIcon } from "@/components/icons";
 
-export const metadata: Metadata = { title: "예배안내" };
+export const metadata: Metadata = { title: "예배 및 모임 안내" };
 
 export default function WorshipPage() {
   return (
     <>
       <PageHero
         eyebrow="WORSHIP"
-        title="예배안내"
+        title="예배 및 모임 안내"
         description="하나님께 드리는 예배의 자리에 여러분을 초대합니다. 처음 오시는 분도 언제든 환영합니다."
       />
 
@@ -27,7 +27,7 @@ export default function WorshipPage() {
                     <tr>
                       <th scope="col" className="px-5 py-3.5 font-semibold sm:px-6">예배</th>
                       <th scope="col" className="px-5 py-3.5 text-right font-semibold sm:px-6 sm:text-left">시간</th>
-                      <th scope="col" className="hidden px-6 py-3.5 font-semibold sm:table-cell">장소</th>
+                      <th scope="col" className="hidden px-6 py-3.5 font-semibold sm:table-cell">비고</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-line">
@@ -48,6 +48,42 @@ export default function WorshipPage() {
               </div>
             </div>
           ))}
+        </Container>
+      </section>
+
+      {/* 제자훈련 · 예꿈도서관 */}
+      <section className="border-t border-line py-16 md:py-24">
+        <Container>
+          <h2 className="font-serif text-2xl font-bold md:text-3xl">제자훈련</h2>
+          <p className="mt-2 text-muted">말씀으로 세워지는 제자, 삶으로 전하는 증인을 길러 냅니다.</p>
+          <div className="mt-8 grid gap-5 md:grid-cols-2">
+            {discipleship.map((d, i) => (
+              <div key={d.level} className="overflow-hidden rounded-2xl border border-line">
+                <h3
+                  className={`px-6 py-4 text-lg font-bold ${
+                    i === 0 ? "bg-brand-50 text-brand-700" : "bg-brand-600 text-white"
+                  }`}
+                >
+                  {d.level}
+                </h3>
+                <ul className="divide-y divide-line">
+                  {d.courses.map((c) => (
+                    <li key={c.name} className="flex items-center justify-between px-6 py-3.5">
+                      <span className="font-medium text-ink">{c.name}</span>
+                      <span className="text-sm font-semibold text-brand-600">{c.period}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-2 rounded-2xl bg-leaf-50 px-6 py-5 md:px-8">
+            <h2 className="flex items-center gap-2 text-lg font-bold">
+              <BookOpenIcon className="text-leaf-700" /> {library.name}
+            </h2>
+            <p className="font-semibold text-leaf-700 tabular-nums">{library.hours}</p>
+          </div>
         </Container>
       </section>
 

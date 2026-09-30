@@ -55,7 +55,7 @@ export default function Header() {
           className="flex items-center gap-2.5"
           aria-label={`${church.name} 홈`}
         >
-          <LogoMark className="h-8 w-auto md:h-9" />
+          <LogoMark className="h-10 w-10 md:h-11 md:w-11" />
           <span
             className={`text-lg font-bold tracking-tight md:text-xl ${
               overHero ? "text-white" : "text-brand-700"
