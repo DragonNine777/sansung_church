@@ -35,7 +35,15 @@ export default function WorshipPage() {
                       <tr key={s.name}>
                         <th scope="row" className="px-5 py-5 text-[17px] font-semibold text-ink sm:px-6">
                           {s.name}
-                          {s.note && <span className="mt-0.5 block text-sm font-normal text-muted sm:hidden">{s.note}</span>}
+                          {s.note && (
+                            <span className="mt-0.5 block text-sm font-normal text-muted sm:hidden">
+                              {s.note.split(" · ").map((part) => (
+                                <span key={part} className="block">
+                                  {part}
+                                </span>
+                              ))}
+                            </span>
+                          )}
                         </th>
                         <td className="px-5 py-5 text-right text-[17px] font-semibold whitespace-nowrap text-brand-600 tabular-nums sm:px-6 sm:text-left">
                           {s.time}
