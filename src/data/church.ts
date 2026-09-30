@@ -99,7 +99,7 @@ export const serviceGroups: { title: string; services: Service[] }[] = [
     title: "교회학교",
     services: [
       { name: "예꼬마을", time: "오전 11:00", note: "주일" },
-      { name: "예꿈마을", time: "오전 10:30", note: "주일" },
+      { name: "예꿈마을", time: "오전 10:40", note: "주일" },
       { name: "주일 중고청 예배", time: "오후 1:00", note: "주일" },
     ],
   },
@@ -156,7 +156,7 @@ export const ministries = [
     subtitle: "교회학교",
     description:
       "예수님의 꿈을 품고 자라는 아이들의 마을입니다. 말씀과 찬양, 따뜻한 교제 가운데 믿음의 기초를 세워 갑니다.",
-    time: "주일 오전 10:30",
+    time: "주일 오전 10:40",
     links: [
       { type: "instagram" as const, label: "@jesus_dream_world", href: "https://www.instagram.com/jesus_dream_world/" },
     ],
