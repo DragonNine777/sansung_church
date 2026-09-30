@@ -84,7 +84,7 @@ export const serviceGroups: { title: string; services: Service[] }[] = [
       { name: "주일 1부 예배", time: "오전 9:00", note: "성남 성전" },
       { name: "주일 2부 예배", time: "오전 11:00", note: "성남 성전" },
       { name: "주일 오전예배", time: "오전 11:00", note: "광주 성전" },
-      { name: "주일 찬양예배", time: "오후 2:30" },
+      { name: "주일 오후예배", time: "오후 2:30", note: "광주 성전" },
     ],
   },
   {
