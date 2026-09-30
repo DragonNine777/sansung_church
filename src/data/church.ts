@@ -81,8 +81,8 @@ export const serviceGroups: { title: string; services: Service[] }[] = [
   {
     title: "주일예배",
     services: [
-      { name: "주일 1부 예배", time: "오전 9:00" },
-      { name: "주일 2부 예배", time: "오전 11:00" },
+      { name: "주일 1부 예배", time: "오전 9:00", note: "성남 성전" },
+      { name: "주일 2부 예배", time: "오전 11:00", note: "성남 성전" },
       { name: "주일 오전예배", time: "오전 11:00", note: "광주 성전" },
       { name: "주일 찬양예배", time: "오후 2:30" },
     ],
@@ -90,9 +90,9 @@ export const serviceGroups: { title: string; services: Service[] }[] = [
   {
     title: "주중 예배",
     services: [
-      { name: "수요예배", time: "오후 7:00" },
-      { name: "새벽기도회", time: "오전 5:00", note: "매일" },
-      { name: "금요심야기도회", time: "오후 9:30", note: "금요일" },
+      { name: "수요예배", time: "오후 7:00", note: "성남 성전" },
+      { name: "새벽기도회", time: "오전 5:00", note: "월,화,수,목,금" },
+      { name: "금요심야기도회", time: "오후 9:00", note: "금요일" },
     ],
   },
   {

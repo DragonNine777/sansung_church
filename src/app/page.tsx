@@ -35,7 +35,7 @@ export default async function Home() {
             <h1 className="mt-4 font-serif text-4xl leading-tight font-bold text-white md:text-6xl md:leading-[1.15]">
               열방을 비추는
               <br />
-              산성의 빛
+              {church.name}
             </h1>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-white/85 md:text-lg">
               순결한 신부의 세대가 되어 그리스도의 십자가 복음을 전하는 교회,
