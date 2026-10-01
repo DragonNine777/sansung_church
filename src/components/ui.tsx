@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import type { Video } from "@/lib/youtube";
-import { formatDate } from "@/lib/youtube";
+import { formatDate, uploadsEmbedUrl } from "@/lib/youtube";
 import { ArrowRightIcon, PlayIcon } from "./icons";
 
 // 하위 페이지 상단 제목 영역
@@ -95,5 +95,21 @@ export function VideoCard({ video }: { video: Video }) {
         <p className="mt-1 text-[13px] text-muted md:text-sm">{formatDate(video.published)}</p>
       </div>
     </a>
+  );
+}
+
+// 영상 목록을 가져오지 못했을 때: 채널 업로드 재생목록을 바로 재생
+export function ChannelEmbed({ channelId, title }: { channelId: string; title: string }) {
+  return (
+    <div className="-mx-5 aspect-video overflow-hidden bg-ink shadow-lg sm:mx-0 sm:rounded-2xl">
+      <iframe
+        src={uploadsEmbedUrl(channelId)}
+        title={title}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+        loading="lazy"
+        className="h-full w-full"
+      />
+    </div>
   );
 }

@@ -91,7 +91,7 @@ export const serviceGroups: { title: string; services: Service[] }[] = [
     title: "주중 예배",
     services: [
       { name: "수요예배", time: "오후 7:00", note: "성남 성전" },
-      { name: "새벽기도회", time: "오전 5:00", note: "성남/광주 성전 · 월,화,수,목,금" },
+      { name: "새벽기도회", time: "오전 5:00", note: "성남/광주 · 월~금" },
       { name: "금요심야기도회", time: "오후 9:00", note: "금요일" },
     ],
   },

@@ -2,8 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { campuses, church, ministries, motto, pastor, serviceGroups, social } from "@/data/church";
 import { getLatestVideos } from "@/lib/youtube";
-import { Container, MoreLink, SectionTitle, VideoCard } from "@/components/ui";
-import { ArrowRightIcon, ClockIcon, MapPinIcon, PhoneIcon, YoutubeIcon } from "@/components/icons";
+import { ChannelEmbed, Container, MoreLink, SectionTitle, VideoCard } from "@/components/ui";
+import { ArrowRightIcon, ClockIcon, MapPinIcon, PhoneIcon } from "@/components/icons";
+
+export const revalidate = 600;
 
 export default async function Home() {
   const videos = (await getLatestVideos(social.youtubeChannelId)).slice(0, 3);
@@ -164,14 +166,7 @@ export default async function Home() {
               ))}
             </div>
           ) : (
-            <a
-              href={social.youtube}
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center gap-3 rounded-2xl border border-line bg-white p-6 font-semibold text-ink hover:text-brand-600"
-            >
-              <YoutubeIcon className="text-red-600" /> 유튜브 채널에서 설교 영상 보기
-            </a>
+            <ChannelEmbed channelId={social.youtubeChannelId} title="산성의 빛 TV 최근 영상" />
           )}
         </Container>
       </section>

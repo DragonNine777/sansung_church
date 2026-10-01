@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { ministries, social } from "@/data/church";
 import { formatDate, getLatestVideos } from "@/lib/youtube";
-import { Container, PageHero, VideoCard } from "@/components/ui";
+import { ChannelEmbed, Container, PageHero, VideoCard } from "@/components/ui";
 import { ExternalIcon, YoutubeIcon } from "@/components/icons";
 
 export const metadata: Metadata = { title: "설교·영상" };
+export const revalidate = 600;
 
 export default async function SermonsPage() {
   const videos = await getLatestVideos(social.youtubeChannelId);
@@ -45,9 +46,7 @@ export default async function SermonsPage() {
               </div>
             </>
           ) : (
-            <p className="rounded-2xl bg-paper p-8 text-center text-muted">
-              영상을 불러오지 못했습니다. 아래 버튼을 눌러 유튜브 채널에서 확인해 주세요.
-            </p>
+            <ChannelEmbed channelId={social.youtubeChannelId} title="산성의 빛 TV 최근 영상" />
           )}
 
           <div className="mt-14 flex flex-wrap justify-center gap-3">
