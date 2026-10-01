@@ -24,7 +24,7 @@ export default function AboutPage() {
                 className="translate-y-4"
               />
             </div>
-            <p className="mt-5 text-center font-serif text-lg text-ink md:text-left">
+            <p className="mt-5 text-center font-serif text-lg text-ink">
               {pastor.title} <strong className="font-bold">{pastor.name}</strong>
             </p>
           </div>
@@ -51,9 +51,6 @@ export default function AboutPage() {
               ))}
             </ul>
 
-            <p className="mt-10 text-right font-serif text-lg text-ink">
-              {church.name} {pastor.name} 목사
-            </p>
           </div>
         </Container>
       </section>
