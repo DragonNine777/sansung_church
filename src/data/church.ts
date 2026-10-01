@@ -217,7 +217,6 @@ export const bulletins: Bulletin[] = [
   {
     date: "2026.09.27",
     title: "2026년 9월 27일 주일 주보",
-    file: "/bulletins/2026-09-27.pdf",
     images: ["/bulletins/2026-09-27-1.jpg", "/bulletins/2026-09-27-2.jpg"],
   },
 ];
