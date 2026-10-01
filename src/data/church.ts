@@ -210,7 +210,9 @@ export type NewsItem = { date: string; title: string; body: string };
 export type Bulletin = { date: string; title: string; file: string };
 
 export const news: NewsItem[] = [];
-export const bulletins: Bulletin[] = [];
+export const bulletins: Bulletin[] = [
+  { date: "2026.09.27", title: "2026년 9월 27일 주일 주보", file: "/bulletins/2026-09-27.pdf" },
+];
 
 export const nav = [
   { href: "/about", label: "교회소개" },
