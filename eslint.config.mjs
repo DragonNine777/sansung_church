@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // npm run dev/build 때 복사되는 pdf.js 파일
+    "public/pdfjs/**",
   ]),
 ]);
 

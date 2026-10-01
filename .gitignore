@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# pdf.js 파일 (npm run dev/build 시 scripts/copy-pdfjs.mjs 가 자동 복사)
+/public/pdfjs/

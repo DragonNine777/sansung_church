@@ -205,13 +205,21 @@ export const ministries = [
 ];
 
 // 교회소식과 주보. 새 항목을 배열 맨 앞에 추가하세요.
-// 주보 PDF는 public/bulletins/ 폴더에 넣고 file 경로를 적으면 됩니다.
+// 주보는 public/bulletins/ 폴더에 넣고 경로를 적으면 됩니다.
+//  - PDF:  file: "/bulletins/2026-09-27.pdf"
+//  - JPG:  images: ["/bulletins/2026-09-27-1.jpg", "/bulletins/2026-09-27-2.jpg"]  (한 장씩 슬라이드)
+//  - 둘 다 적으면 미리보기는 JPG로, '원본 보기'는 PDF로 연결 (JPG가 더 빠르고 어디서나 잘 보임)
 export type NewsItem = { date: string; title: string; body: string };
-export type Bulletin = { date: string; title: string; file: string };
+export type Bulletin = { date: string; title: string; file?: string; images?: string[] };
 
 export const news: NewsItem[] = [];
 export const bulletins: Bulletin[] = [
-  { date: "2026.09.27", title: "2026년 9월 27일 주일 주보", file: "/bulletins/2026-09-27.pdf" },
+  {
+    date: "2026.09.27",
+    title: "2026년 9월 27일 주일 주보",
+    file: "/bulletins/2026-09-27.pdf",
+    images: ["/bulletins/2026-09-27-1.jpg", "/bulletins/2026-09-27-2.jpg"],
+  },
 ];
 
 export const nav = [

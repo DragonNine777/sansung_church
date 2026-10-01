@@ -95,7 +95,19 @@ export const YoutubeIcon = (p: IconProps) => (
   </svg>
 );
 
-export const BookOpenIcon = (p: IconProps) => (
+export const ChevronLeftIcon = (p: IconProps) => (
+  <svg {...base(p)}>
+    <path d="m15 18-6-6 6-6" />
+  </svg>
+);
+
+export const ChevronRightIcon = (p: IconProps) => (
+  <svg {...base(p)}>
+    <path d="m9 18 6-6-6-6" />
+  </svg>
+);
+
+export const BookOpenIcon =(p: IconProps) => (
   <svg {...base(p)}>
     <path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2ZM22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7Z" />
   </svg>
