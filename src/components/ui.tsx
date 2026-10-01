@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import type { Video } from "@/lib/youtube";
-import { formatDate, uploadsEmbedUrl } from "@/lib/youtube";
+import { uploadsEmbedUrl } from "@/lib/youtube";
 import { ArrowRightIcon, PlayIcon } from "./icons";
 
 // 하위 페이지 상단 제목 영역
@@ -92,7 +92,6 @@ export function VideoCard({ video }: { video: Video }) {
           {video.title}
           <span className="sr-only"> (유튜브, 새 창)</span>
         </h3>
-        <p className="mt-1 text-[13px] text-muted md:text-sm">{formatDate(video.published)}</p>
       </div>
     </a>
   );

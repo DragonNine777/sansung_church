@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ministries, social } from "@/data/church";
-import { formatDate, getLatestVideos } from "@/lib/youtube";
+import { getLatestVideos } from "@/lib/youtube";
 import { ChannelEmbed, Container, PageHero, VideoCard } from "@/components/ui";
 import { ExternalIcon, YoutubeIcon } from "@/components/icons";
 
@@ -34,7 +34,6 @@ export default async function SermonsPage() {
                 <div>
                   <p className="text-sm font-semibold tracking-[0.2em] text-brand-600">LATEST</p>
                   <h2 className="mt-2 font-serif text-xl leading-snug font-bold md:text-2xl">{latest.title}</h2>
-                  <p className="mt-2 text-muted">{formatDate(latest.published)}</p>
                 </div>
               </div>
 

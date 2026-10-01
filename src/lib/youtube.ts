@@ -17,25 +17,11 @@ const decode = (s: string) =>
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'");
 
-// 제목 앞의 날짜 "2026년 9월30일(수)" 를 찾아 [ISO 날짜, 나머지 제목] 으로 나눔
-const DATE_PREFIX = /^\s*(\d{4})\s*년\s*(\d{1,2})\s*월\s*(\d{1,2})\s*일\s*(?:\([^)]*\))?\s*[:\-–·]?\s*/;
-
-function splitDate(title: string): { date: string; rest: string } {
-  const m = title.match(DATE_PREFIX);
-  if (!m) return { date: "", rest: title.trim() };
-  const [, y, mo, d] = m;
-  return {
-    date: `${y}-${mo.padStart(2, "0")}-${d.padStart(2, "0")}`,
-    rest: title.slice(m[0].length).trim() || title.trim(),
-  };
-}
-
 function toVideo(id: string, rawTitle: string, published: string): Video {
-  const { date, rest } = splitDate(decode(rawTitle));
   return {
     id,
-    title: rest,
-    published: published || date,
+    title: decode(rawTitle).trim(),
+    published,
     thumbnail: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
   };
 }
@@ -102,9 +88,3 @@ export async function getLatestVideos(channelId: string, limit = 15): Promise<Vi
 // 채널 업로드 재생목록 임베드 주소 (UC... → UU...)
 export const uploadsEmbedUrl = (channelId: string) =>
   `https://www.youtube-nocookie.com/embed/videoseries?list=UU${channelId.slice(2)}`;
-
-export const formatDate = (iso: string) => {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "";
-  return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`;
-};
