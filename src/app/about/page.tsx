@@ -13,7 +13,7 @@ export default function AboutPage() {
       {/* 인사말 */}
       <section className="py-16 md:py-24">
         <Container className="grid gap-12 md:grid-cols-[0.8fr_1.2fr] md:gap-16">
-          <div className="md:sticky md:top-28 md:self-start">
+          <div className="md:self-start">
             <div className="relative mx-auto max-w-xs overflow-hidden rounded-2xl bg-gradient-to-b from-brand-100 to-brand-50 md:max-w-none">
               <Image
                 src={pastor.photo}
@@ -27,6 +27,24 @@ export default function AboutPage() {
             <p className="mt-5 text-center font-serif text-lg text-ink">
               {pastor.title} <strong className="font-bold">{pastor.name}</strong>
             </p>
+
+            <dl className="mx-auto mt-8 max-w-sm space-y-6 border-t border-line pt-8 md:max-w-none">
+              {pastor.profile.map((section) => (
+                <div key={section.title}>
+                  <dt className="text-sm font-bold tracking-wide text-brand-600">{section.title}</dt>
+                  <dd className="mt-2">
+                    <ul className="space-y-1.5">
+                      {section.items.map((item) => (
+                        <li key={item} className="flex gap-2.5 text-[15px] leading-relaxed text-body">
+                          <span aria-hidden="true" className="mt-[0.6em] h-1 w-1 shrink-0 rounded-full bg-leaf-500" />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </dd>
+                </div>
+              ))}
+            </dl>
           </div>
 
           <div>
