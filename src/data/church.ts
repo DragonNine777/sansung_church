@@ -215,6 +215,11 @@ export type Bulletin = { date: string; title: string; file?: string; images?: st
 export const news: NewsItem[] = [];
 export const bulletins: Bulletin[] = [
   {
+    date: "2026.10.04",
+    title: "2026년 10월 4일 주일 주보",
+    images: ["/bulletins/2026-10-4-1.jpg", "/bulletins/2026-10-4-2.jpg"],
+  },
+  {
     date: "2026.09.27",
     title: "2026년 9월 27일 주일 주보",
     images: ["/bulletins/2026-09-27-1.jpg", "/bulletins/2026-09-27-2.jpg"],
