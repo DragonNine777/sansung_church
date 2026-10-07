@@ -106,18 +106,18 @@ export const serviceGroups: { title: string; services: Service[] }[] = [
   {
     title: "주일예배",
     services: [
-      { name: "주일 1부 예배", time: "오전 9:00", note: "성남 성전" },
+      { name: "주일 1부 예배", time: "오전 09:00", note: "성남 성전" },
       { name: "주일 2부 예배", time: "오전 11:00", note: "성남 성전" },
       { name: "주일 오전예배", time: "오전 11:00", note: "광주 성전" },
-      { name: "주일 오후예배", time: "오후 2:30", note: "광주 성전" },
+      { name: "주일 오후예배", time: "오후 02:30", note: "광주 성전" },
     ],
   },
   {
     title: "주중 예배",
     services: [
-      { name: "수요예배", time: "오후 7:00", note: "성남 성전" },
-      { name: "새벽기도회", time: "오전 5:00", note: "성남/광주 · 월~금" },
-      { name: "금요심야기도회", time: "오후 9:00", note: "금요일" },
+      { name: "수요예배", time: "오후 07:00", note: "성남 성전" },
+      { name: "새벽기도회", time: "오전 05:00", note: "성남/광주 · 월~금" },
+      { name: "금요심야기도회", time: "오후 09:00", note: "금요일" },
     ],
   },
   {
@@ -125,13 +125,13 @@ export const serviceGroups: { title: string; services: Service[] }[] = [
     services: [
       { name: "예꼬마을", time: "오전 11:00", note: "주일" },
       { name: "예꿈마을", time: "오전 10:40", note: "주일" },
-      { name: "주일 중고청 예배", time: "오후 1:00", note: "주일" },
+      { name: "주일 중고청 예배", time: "오후 01:00", note: "주일" },
     ],
   },
 ];
 
 // 예꿈도서관
-export const library = { name: "예꿈도서관", hours: "월~금 오후 2:00 ~ 9:00" };
+export const library = { name: "예꿈도서관", hours: "월~금 오후 02:00 ~ 09:00" };
 
 // 제자훈련 과정
 export const discipleship: { level: string; courses: { name: string; period: string }[] }[] = [
@@ -192,7 +192,7 @@ export const ministries = [
     subtitle: "중고청 · 청년회",
     description:
       "‘형제’라는 뜻의 아델포스는 복음 안에서 한 가족 된 청년들의 공동체입니다. 함께 예배하고 삶을 나누며 소명을 발견해 갑니다.",
-    time: "주일 오후 1:00",
+    time: "주일 오후 01:00",
     links: [
       { type: "instagram" as const, label: "@adel_pos", href: "https://www.instagram.com/adel_pos/" },
       {
