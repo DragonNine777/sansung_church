@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { bulletins as staticBulletins, news, social, type Bulletin } from "@/data/church";
-import { getPosts } from "@/lib/posts";
+import { fileUrl, getPosts } from "@/lib/posts";
 import { Container, PageHero } from "@/components/ui";
 import BulletinViewer from "@/components/BulletinViewer";
 import { ExternalIcon, InstagramIcon } from "@/components/icons";
@@ -14,7 +14,12 @@ export default async function NewsPage() {
   const bulletins: Bulletin[] = [
     ...posts
       .filter((p) => p.kind === "bulletin")
-      .map((p) => ({ date: p.date, title: p.title, file: p.file, images: p.images.length ? p.images : undefined })),
+      .map((p) => ({
+        date: p.date,
+        title: p.title,
+        file: p.file ? fileUrl(p.file) : undefined,
+        images: p.images.length ? p.images.map(fileUrl) : undefined,
+      })),
     ...staticBulletins,
   ];
   const newsPosts = posts.filter((p) => p.kind === "news");
@@ -46,9 +51,9 @@ export default async function NewsPage() {
               {newsPosts.map((p) => (
                 <li key={p.id} className="flex flex-col overflow-hidden rounded-2xl border border-line bg-white">
                   {p.images[0] && (
-                    <a href={p.images[0]} target="_blank" rel="noreferrer" aria-label={`${p.title} 포스터 크게 보기 (새 창)`}>
+                    <a href={fileUrl(p.images[0])} target="_blank" rel="noreferrer" aria-label={`${p.title} 포스터 크게 보기 (새 창)`}>
                       <Image
-                        src={p.images[0]}
+                        src={fileUrl(p.images[0])}
                         alt={`${p.title} 포스터`}
                         width={800}
                         height={1100}
@@ -65,7 +70,7 @@ export default async function NewsPage() {
                       <ul className="mt-3 flex flex-wrap gap-2">
                         {p.images.slice(1).map((src, i) => (
                           <li key={src}>
-                            <a href={src} target="_blank" rel="noreferrer" className="text-sm font-semibold text-brand-600 hover:underline">
+                            <a href={fileUrl(src)} target="_blank" rel="noreferrer" className="text-sm font-semibold text-brand-600 hover:underline">
                               이미지 {i + 2} 보기
                             </a>
                           </li>

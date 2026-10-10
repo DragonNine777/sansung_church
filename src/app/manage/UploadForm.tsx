@@ -1,6 +1,5 @@
 "use client";
 
-import { upload } from "@vercel/blob/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { createPost } from "./actions";
@@ -16,6 +15,20 @@ const bulletinTitle = (iso: string) => {
   const [y, m, d] = iso.split("-").map(Number);
   return y ? `${y}년 ${m}월 ${d}일 주일 주보` : "";
 };
+
+// 큰 사진은 올리기 전에 줄임 (Vercel 요청 한도 4.5MB). 긴 변 최대 2400px, JPEG 품질 0.88
+async function shrink(file: File): Promise<File> {
+  if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return file;
+  const img = await createImageBitmap(file);
+  const scale = Math.min(1, 2400 / Math.max(img.width, img.height));
+  if (scale === 1 && file.size <= 3.5 * 1024 * 1024) return file;
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(img.width * scale);
+  canvas.height = Math.round(img.height * scale);
+  canvas.getContext("2d")!.drawImage(img, 0, 0, canvas.width, canvas.height);
+  const blob = await new Promise<Blob | null>((r) => canvas.toBlob(r, "image/jpeg", 0.88));
+  return blob ? new File([blob], file.name.replace(/\.\w+$/, ".jpg"), { type: "image/jpeg" }) : file;
+}
 
 export default function UploadForm() {
   const router = useRouter();
@@ -39,20 +52,23 @@ export default function UploadForm() {
     if (!shownTitle.trim()) return setStatus({ type: "error", message: "제목을 입력해 주세요." });
 
     try {
-      // 업로드 토큰 주소: 현재 관리자 비밀 주소 + /upload
+      // 업로드 주소: 현재 관리자 비밀 주소 + /upload
       const base = window.location.pathname.replace(/\/+$/, "");
       const images: string[] = [];
       let file: string | undefined;
-      for (const [i, f] of files.entries()) {
+      for (const [i, original] of files.entries()) {
         setStatus({ type: "busy", message: `파일 올리는 중… (${i + 1}/${files.length})` });
-        const ext = f.name.split(".").pop()?.toLowerCase() || "jpg";
-        const blob = await upload(`${kind}/${date}-${i + 1}.${ext}`, f, {
-          access: "public",
-          handleUploadUrl: `${base}/upload`,
-          contentType: f.type,
-        });
-        if (f.type === "application/pdf") file = blob.url;
-        else images.push(blob.url);
+        const f = await shrink(original);
+        const payload = new FormData();
+        payload.append("file", f);
+        payload.append("kind", kind);
+        payload.append("date", date);
+        payload.append("index", String(i + 1));
+        const res = await fetch(`${base}/upload`, { method: "POST", body: payload });
+        const data = (await res.json().catch(() => ({}))) as { pathname?: string; type?: string; error?: string };
+        if (!res.ok || !data.pathname) throw new Error(data.error ?? `오류 ${res.status}`);
+        if (data.type === "application/pdf") file = data.pathname;
+        else images.push(data.pathname);
       }
       setStatus({ type: "busy", message: "저장하는 중…" });
       const result = await createPost({ kind, title: shownTitle, date: date.replaceAll("-", "."), body, images, file });

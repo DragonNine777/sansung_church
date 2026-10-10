@@ -1,7 +1,7 @@
-import { list } from "@vercel/blob";
+import { get, list } from "@vercel/blob";
 import { unstable_cache } from "next/cache";
 
-// 관리자 페이지에서 올린 주보·소식. Vercel Blob 의 posts/{id}.json 에 하나씩 저장
+// 관리자 페이지에서 올린 주보·소식. Vercel Blob(비공개 저장소)의 posts/{id}.json 에 하나씩 저장
 export type PostKind = "bulletin" | "news";
 
 export type Post = {
@@ -10,33 +10,36 @@ export type Post = {
   title: string;
   date: string; // "2026.10.04"
   body?: string;
-  images: string[];
-  file?: string; // 주보 PDF
+  images: string[]; // 저장소 경로 (예: "bulletin/2026-10-04-1-abc.jpg")
+  file?: string; // 주보 PDF 저장소 경로
   createdAt: string;
 };
 
 export const POSTS_TAG = "posts";
 export const POST_PREFIX = "posts/";
 
-// Blob 파일 주소인지 확인 (다른 사이트 주소가 저장되지 않도록)
-export const isBlobUrl = (url: string) => {
-  try {
-    const u = new URL(url);
-    return u.protocol === "https:" && u.hostname.endsWith(".public.blob.vercel-storage.com");
-  } catch {
-    return false;
-  }
-};
+// 업로드 파일이 들어가는 폴더. /files/ 로는 이 폴더의 파일만 보여줌
+export const UPLOAD_FOLDERS = ["bulletin/", "news/"] as const;
+
+export const isUploadPath = (pathname: string) =>
+  UPLOAD_FOLDERS.some((f) => pathname.startsWith(f)) && !pathname.includes("..") && /^[\w\-./]+$/.test(pathname);
+
+// 화면에서 쓰는 주소 (비공개 저장소라 사이트의 /files/ 를 거쳐 전달)
+export const fileUrl = (pathname: string) => `/files/${pathname}`;
+
+// 저장소 연결 여부: 토큰 방식 또는 OIDC 방식(BLOB_STORE_ID)
+export const storageConfigured = () => !!(process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID);
 
 async function readPosts(): Promise<Post[]> {
-  if (!process.env.BLOB_READ_WRITE_TOKEN) return [];
+  if (!storageConfigured()) return [];
   try {
     const { blobs } = await list({ prefix: POST_PREFIX, limit: 1000 });
     const files = blobs.filter((b) => b.pathname.endsWith(".json"));
     const posts = await Promise.all(
       files.map(async (b) => {
-        const res = await fetch(b.url, { cache: "no-store" });
-        return res.ok ? ((await res.json()) as Post) : null;
+        const res = await get(b.pathname, { access: "private", useCache: false });
+        if (!res || res.statusCode !== 200) return null;
+        return (await new Response(res.stream).json()) as Post;
       }),
     );
     return posts
@@ -48,7 +51,7 @@ async function readPosts(): Promise<Post[]> {
 }
 
 // 글을 올리거나 지울 때 updateTag(POSTS_TAG) 로 즉시 갱신. 그 외에는 캐시를 사용해 Blob 호출을 줄임
-const cachedPosts = unstable_cache(readPosts, ["posts-v1", process.env.BLOB_READ_WRITE_TOKEN ? "on" : "off"], {
+const cachedPosts = unstable_cache(readPosts, ["posts-v2", storageConfigured() ? "on" : "off"], {
   tags: [POSTS_TAG],
   revalidate: 3600,
 });

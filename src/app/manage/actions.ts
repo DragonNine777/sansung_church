@@ -5,7 +5,7 @@ import { del, put } from "@vercel/blob";
 import { revalidatePath, updateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { ADMIN_COOKIE, adminPath, checkPassword, isAdmin, sessionToken } from "@/lib/admin";
-import { getPosts, isBlobUrl, POST_PREFIX, POSTS_TAG, type Post, type PostKind } from "@/lib/posts";
+import { getPosts, isUploadPath, POST_PREFIX, POSTS_TAG, type Post, type PostKind } from "@/lib/posts";
 
 export type LoginState = { error?: string };
 
@@ -56,7 +56,7 @@ export async function createPost(input: NewPost): Promise<{ ok: boolean; error?:
   if (!/^\d{4}\.\d{2}\.\d{2}$/.test(date)) return { ok: false, error: "날짜 형식이 올바르지 않습니다." };
   if (input.kind !== "bulletin" && input.kind !== "news") return { ok: false, error: "종류가 올바르지 않습니다." };
   const files = [...input.images, ...(input.file ? [input.file] : [])];
-  if (!files.every(isBlobUrl)) return { ok: false, error: "업로드한 파일 주소가 올바르지 않습니다." };
+  if (!files.every(isUploadPath)) return { ok: false, error: "업로드한 파일 경로가 올바르지 않습니다." };
   if (input.kind === "bulletin" && files.length === 0) return { ok: false, error: "주보 이미지나 PDF를 올려 주세요." };
 
   const post: Post = {
@@ -71,7 +71,7 @@ export async function createPost(input: NewPost): Promise<{ ok: boolean; error?:
   };
 
   await put(`${POST_PREFIX}${post.id}.json`, JSON.stringify(post), {
-    access: "public",
+    access: "private",
     contentType: "application/json",
     addRandomSuffix: false,
   });

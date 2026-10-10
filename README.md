@@ -23,7 +23,7 @@ npm run start    # 빌드 결과 실행
 | 성전 주소·전화 | `campuses` |
 | 교회학교·청년부 소개 | `ministries` |
 | 교회소식 | `news` 배열 맨 앞에 추가 |
-| 주보 | PDF를 `public/bulletins/`에 넣고 `bulletins` 배열에 추가 |
+| 주보 | 관리자 페이지에서 올리기 (또는 JPG를 `public/bulletins/`에 넣고 `bulletins` 배열에 추가) |
 
 사진은 `public/images/`에 있습니다.
 
@@ -31,19 +31,18 @@ npm run start    # 빌드 결과 실행
 
 ## 관리자 페이지 (주보·소식 올리기)
 
-비밀 주소의 관리자 페이지에서 주보(JPG·PDF)와 소식(포스터 이미지 + 글)을 올리고 지울 수 있습니다.
-올린 내용은 교회소식 페이지에 바로 반영됩니다. 관리자 주소는 사이트 어디에도 링크되지 않습니다.
+비밀 링크의 관리자 페이지에서 주보(JPG·PDF)와 소식(포스터 이미지 + 글)을 올리고 지울 수 있습니다.
+올린 내용은 교회소식 페이지에 바로 반영됩니다. 비밀 링크를 아는 사람만 들어갈 수 있으므로 링크를 다른 사람과 공유하지 마세요.
 
-Vercel 프로젝트 설정이 필요합니다.
+Vercel 설정 (Settings → Environment Variables, Production)
 
-1. **Storage → Create → Blob** 으로 저장소를 만들고 이 프로젝트에 연결 (`BLOB_READ_WRITE_TOKEN` 자동 설정)
-2. **Settings → Environment Variables** 에 추가
-   - `ADMIN_PATH` : 관리자 페이지 비밀 주소 (예: `sl-admin-abc123` → `https://사이트/sl-admin-abc123`)
-   - `ADMIN_PASSWORD` : 관리자 비밀번호
-3. 다시 배포 (Deployments → 최신 배포 → Redeploy)
+- `ADMIN_PATH` : 관리자 비밀 링크 주소 (12자 이상, 길고 추측하기 어렵게). 바꾸면 이전 링크는 즉시 막힘
+- `ADMIN_PASSWORD` : (선택) 설정하면 비밀 링크 + 비밀번호 로그인까지 요구
+- `BLOB_STORE_ID` : Vercel Blob 저장소 연결 시 자동 설정 (비공개 저장소)
 
-저장소가 공개되어 있으므로 비밀 주소와 비밀번호는 코드가 아닌 환경변수에만 둡니다.
-로컬에서 시험할 때는 같은 값을 `.env.local` 에 적습니다.
+환경변수를 바꾼 뒤에는 다시 배포해야 반영됩니다.
+업로드한 파일은 비공개 저장소에 저장되고 사이트의 `/files/...` 주소로 보여집니다.
+사진은 올리기 전에 브라우저에서 긴 변 2400px 이하로 줄여서 보냅니다 (Vercel 요청 한도 4.5MB).
 
 ## 페이지
 
