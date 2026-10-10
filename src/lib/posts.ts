@@ -13,6 +13,7 @@ export type Post = {
   images: string[]; // 저장소 경로 (예: "bulletin/2026-10-04-1-abc.jpg")
   file?: string; // 주보 PDF 저장소 경로
   createdAt: string;
+  updatedAt?: string;
 };
 
 export const POSTS_TAG = "posts";
@@ -24,8 +25,7 @@ export const UPLOAD_FOLDERS = ["bulletin/", "news/"] as const;
 export const isUploadPath = (pathname: string) =>
   UPLOAD_FOLDERS.some((f) => pathname.startsWith(f)) && !pathname.includes("..") && /^[\w\-./]+$/.test(pathname);
 
-// 화면에서 쓰는 주소 (비공개 저장소라 사이트의 /files/ 를 거쳐 전달)
-export const fileUrl = (pathname: string) => `/files/${pathname}`;
+export { fileUrl } from "./files";
 
 // 저장소 연결 여부: 토큰 방식 또는 OIDC 방식(BLOB_STORE_ID)
 export const storageConfigured = () => !!(process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID);

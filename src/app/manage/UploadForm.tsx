@@ -1,9 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { createPost } from "./actions";
-import type { PostKind } from "@/lib/posts";
+import { useEffect, useId, useMemo, useState, type FormEvent } from "react";
+import { createPost, updatePost } from "./actions";
+import { fileUrl } from "@/lib/files";
+import type { Post, PostKind } from "@/lib/posts";
 
 const today = () => {
   // 한국 시간 기준 오늘 (YYYY-MM-DD)
@@ -30,13 +31,23 @@ async function shrink(file: File): Promise<File> {
   return blob ? new File([blob], file.name.replace(/\.\w+$/, ".jpg"), { type: "image/jpeg" }) : file;
 }
 
-export default function UploadForm() {
+type Props = {
+  // 있으면 수정 모드: 기존 글 내용을 채워서 시작
+  post?: Post;
+  onDone?: () => void;
+};
+
+export default function UploadForm({ post, onDone }: Props) {
   const router = useRouter();
-  const [kind, setKind] = useState<PostKind>("bulletin");
-  const [date, setDate] = useState(today);
-  const [title, setTitle] = useState("");
-  const [titleEdited, setTitleEdited] = useState(false);
-  const [body, setBody] = useState("");
+  const uid = useId();
+  const editing = !!post;
+  const [kind, setKind] = useState<PostKind>(post?.kind ?? "bulletin");
+  const [date, setDate] = useState(() => (post ? post.date.replaceAll(".", "-") : today()));
+  const [title, setTitle] = useState(post?.title ?? "");
+  const [titleEdited, setTitleEdited] = useState(editing);
+  const [body, setBody] = useState(post?.body ?? "");
+  const [keptImages, setKeptImages] = useState<string[]>(post?.images ?? []);
+  const [keptFile, setKeptFile] = useState<string | undefined>(post?.file);
   const [files, setFiles] = useState<File[]>([]);
   const [status, setStatus] = useState<{ type: "idle" | "busy" | "done" | "error"; message?: string }>({ type: "idle" });
 
@@ -48,14 +59,15 @@ export default function UploadForm() {
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (kind === "bulletin" && files.length === 0) return setStatus({ type: "error", message: "주보 이미지나 PDF를 선택해 주세요." });
+    const total = keptImages.length + (keptFile ? 1 : 0) + files.length;
+    if (kind === "bulletin" && total === 0) return setStatus({ type: "error", message: "주보 이미지나 PDF를 선택해 주세요." });
     if (!shownTitle.trim()) return setStatus({ type: "error", message: "제목을 입력해 주세요." });
 
     try {
       // 업로드 주소: 현재 관리자 비밀 주소 + /upload
       const base = window.location.pathname.replace(/\/+$/, "");
-      const images: string[] = [];
-      let file: string | undefined;
+      const images = [...keptImages];
+      let file = keptFile;
       for (const [i, original] of files.entries()) {
         setStatus({ type: "busy", message: `파일 올리는 중… (${i + 1}/${files.length})` });
         const f = await shrink(original);
@@ -63,7 +75,7 @@ export default function UploadForm() {
         payload.append("file", f);
         payload.append("kind", kind);
         payload.append("date", date);
-        payload.append("index", String(i + 1));
+        payload.append("index", String(images.length + 1));
         const res = await fetch(`${base}/upload`, { method: "POST", body: payload });
         const data = (await res.json().catch(() => ({}))) as { pathname?: string; type?: string; error?: string };
         if (!res.ok || !data.pathname) throw new Error(data.error ?? `오류 ${res.status}`);
@@ -71,25 +83,43 @@ export default function UploadForm() {
         else images.push(data.pathname);
       }
       setStatus({ type: "busy", message: "저장하는 중…" });
-      const result = await createPost({ kind, title: shownTitle, date: date.replaceAll("-", "."), body, images, file });
+      const input = {
+        kind,
+        title: shownTitle,
+        date: date.replaceAll("-", "."),
+        body: kind === "news" ? body : undefined,
+        images,
+        file,
+      };
+      const result = post ? await updatePost(post.id, input) : await createPost(input);
       if (!result.ok) return setStatus({ type: "error", message: result.error });
+      router.refresh();
+      if (post) return onDone?.();
       setStatus({ type: "done", message: "올렸습니다. 교회소식 페이지에 바로 반영됩니다." });
       setFiles([]);
       setBody("");
       setTitle("");
       setTitleEdited(false);
       (e.target as HTMLFormElement).reset();
-      router.refresh();
     } catch (err) {
-      setStatus({ type: "error", message: `올리지 못했습니다: ${(err as Error).message}` });
+      setStatus({ type: "error", message: `${editing ? "저장하" : "올리"}지 못했습니다: ${(err as Error).message}` });
     }
   };
 
   const busy = status.type === "busy";
   const field = "mt-2 block w-full rounded-lg border border-line px-4 text-base focus:border-brand-500";
+  const kept = [
+    ...keptImages.map((path) => ({ path, pdf: false })),
+    ...(keptFile ? [{ path: keptFile, pdf: true }] : []),
+  ];
 
   return (
-    <form onSubmit={onSubmit} className="space-y-6 rounded-2xl border border-line bg-white p-6 md:p-8">
+    <form
+      onSubmit={onSubmit}
+      aria-label={post ? `${post.title} 수정` : "새 글 올리기"}
+      className={`space-y-6 rounded-2xl border bg-white p-6 md:p-8 ${editing ? "border-brand-200 shadow-md" : "border-line"}`}
+    >
+      {editing && <p className="text-sm font-bold text-brand-600">글 수정</p>}
       <fieldset>
         <legend className="font-semibold text-ink">종류</legend>
         <div className="mt-2 grid grid-cols-2 gap-3">
@@ -108,7 +138,7 @@ export default function UploadForm() {
               <span className="flex items-center gap-2 font-semibold text-ink">
                 <input
                   type="radio"
-                  name="kind"
+                  name={`${uid}-kind`}
                   value={value}
                   checked={kind === value}
                   onChange={() => setKind(value)}
@@ -124,17 +154,26 @@ export default function UploadForm() {
 
       <div className="grid gap-6 md:grid-cols-[200px_1fr]">
         <div>
-          <label htmlFor="date" className="font-semibold text-ink">
+          <label htmlFor={`${uid}-date`} className="font-semibold text-ink">
             날짜
           </label>
-          <input id="date" type="date" required value={date} onChange={(e) => setDate(e.target.value)} className={`${field} h-12`} />
+          <input
+            id={`${uid}-date`}
+            data-field="date"
+            type="date"
+            required
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className={`${field} h-12`}
+          />
         </div>
         <div>
-          <label htmlFor="title" className="font-semibold text-ink">
+          <label htmlFor={`${uid}-title`} className="font-semibold text-ink">
             제목
           </label>
           <input
-            id="title"
+            id={`${uid}-title`}
+            data-field="title"
             required
             value={shownTitle}
             onChange={(e) => {
@@ -149,22 +188,67 @@ export default function UploadForm() {
 
       {kind === "news" && (
         <div>
-          <label htmlFor="body" className="font-semibold text-ink">
+          <label htmlFor={`${uid}-body`} className="font-semibold text-ink">
             내용 <span className="font-normal text-muted">(선택)</span>
           </label>
-          <textarea id="body" rows={5} value={body} onChange={(e) => setBody(e.target.value)} className={`${field} py-3 leading-relaxed`} />
+          <textarea
+            id={`${uid}-body`}
+            data-field="body"
+            rows={5}
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
+            className={`${field} py-3 leading-relaxed`}
+          />
+        </div>
+      )}
+
+      {kept.length > 0 && (
+        <div>
+          <p className="font-semibold text-ink">
+            올려둔 파일 <span className="font-normal text-muted">(빼려면 ‘빼기’를 누르세요)</span>
+          </p>
+          <ul className="mt-3 grid grid-cols-3 gap-3 sm:grid-cols-4">
+            {kept.map((k, i) => (
+              <li key={k.path} className="overflow-hidden rounded-lg border border-line bg-paper text-xs">
+                {k.pdf ? (
+                  <div className="flex aspect-[3/4] items-center justify-center font-semibold text-muted">PDF</div>
+                ) : (
+                  // eslint-disable-next-line @next/next/no-img-element -- 관리 화면 미리보기
+                  <img src={fileUrl(k.path)} alt={`${i + 1}번 파일`} className="aspect-[3/4] w-full object-cover" />
+                )}
+                <div className="flex items-center justify-between px-2 py-1.5">
+                  <span className="text-muted">{i + 1}</span>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      k.pdf ? setKeptFile(undefined) : setKeptImages((list) => list.filter((p) => p !== k.path))
+                    }
+                    className="rounded px-2 py-1 font-semibold text-red-700 hover:bg-red-50"
+                    aria-label={`${i + 1}번 파일 빼기`}
+                  >
+                    빼기
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 
       <div>
-        <label htmlFor="files" className="font-semibold text-ink">
-          {kind === "bulletin" ? "주보 파일" : "포스터 이미지"}{" "}
+        <label htmlFor={`${uid}-files`} className="font-semibold text-ink">
+          {editing ? "파일 추가" : kind === "bulletin" ? "주보 파일" : "포스터 이미지"}{" "}
           <span className="font-normal text-muted">
-            {kind === "bulletin" ? "(JPG 여러 장은 순서대로 선택, 또는 PDF 1개)" : "(선택, 여러 장 가능)"}
+            {editing
+              ? "(새 파일은 올려둔 파일 뒤에 붙습니다)"
+              : kind === "bulletin"
+                ? "(JPG 여러 장은 순서대로 선택, 또는 PDF 1개)"
+                : "(선택, 여러 장 가능)"}
           </span>
         </label>
         <input
-          id="files"
+          id={`${uid}-files`}
+          data-field="files"
           type="file"
           multiple
           accept={kind === "bulletin" ? "image/jpeg,image/png,image/webp,application/pdf" : "image/jpeg,image/png,image/webp,image/gif"}
@@ -182,7 +266,7 @@ export default function UploadForm() {
                   <div className="flex aspect-[3/4] items-center justify-center font-semibold text-muted">PDF</div>
                 )}
                 <p className="truncate px-2 py-1.5 text-muted">
-                  {i + 1}. {f.name}
+                  {kept.length + i + 1}. {f.name}
                 </p>
               </li>
             ))}
@@ -190,18 +274,30 @@ export default function UploadForm() {
         )}
       </div>
 
-      <div className="flex flex-wrap items-center gap-4">
+      <div className="flex flex-wrap items-center gap-3">
         <button
           type="submit"
           disabled={busy}
           className="h-12 rounded-lg bg-brand-600 px-8 font-semibold text-white transition-colors hover:bg-brand-700 disabled:opacity-50"
         >
-          {busy ? "올리는 중…" : "올리기"}
+          {busy ? (editing ? "저장하는 중…" : "올리는 중…") : editing ? "수정 저장" : "올리기"}
         </button>
+        {editing && (
+          <button
+            type="button"
+            disabled={busy}
+            onClick={onDone}
+            className="h-12 rounded-lg border border-line px-6 font-semibold text-ink hover:border-brand-200 disabled:opacity-50"
+          >
+            취소
+          </button>
+        )}
         {status.message && (
           <p
             role={status.type === "error" ? "alert" : "status"}
-            className={`text-sm font-medium ${status.type === "error" ? "text-red-700" : status.type === "done" ? "text-leaf-700" : "text-muted"}`}
+            className={`text-sm font-medium ${
+              status.type === "error" ? "text-red-700" : status.type === "done" ? "text-leaf-700" : "text-muted"
+            }`}
           >
             {status.message}
           </p>
