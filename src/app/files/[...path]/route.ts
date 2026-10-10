@@ -15,8 +15,8 @@ export async function GET(_request: Request, ctx: RouteContext<"/files/[...path]
       headers: {
         "Content-Type": result.blob.contentType,
         "Content-Length": String(result.blob.size),
-        // 업로드 파일 이름에는 무작위 문자열이 붙어 내용이 바뀌지 않으므로 오래 캐시
-        "Cache-Control": "public, max-age=31536000, immutable",
+        // 삭제한 파일이 너무 오래 남지 않도록 1시간만 캐시
+        "Cache-Control": "public, max-age=3600, s-maxage=3600",
         "X-Content-Type-Options": "nosniff",
       },
     });
