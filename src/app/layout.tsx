@@ -3,6 +3,7 @@ import { Noto_Serif_KR } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import MobileQuickBar from "@/components/MobileQuickBar";
+import VisitTracker from "@/components/VisitTracker";
 import { church } from "@/data/church";
 import "./globals.css";
 
@@ -50,6 +51,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </main>
         <Footer />
         <MobileQuickBar />
+        <VisitTracker />
       </body>
     </html>
   );

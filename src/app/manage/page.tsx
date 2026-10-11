@@ -4,6 +4,7 @@ import { getPosts, storageConfigured } from "@/lib/posts";
 import { logout } from "./actions";
 import LoginForm from "./LoginForm";
 import PostList from "./PostList";
+import StatsPanel from "./StatsPanel";
 import UploadForm from "./UploadForm";
 
 export const metadata: Metadata = {
@@ -24,7 +25,7 @@ export default async function ManagePage() {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="text-sm font-semibold tracking-[0.2em] text-brand-600">ADMIN</p>
-            <h1 className="mt-1 font-serif text-3xl font-bold">주보 · 소식 관리</h1>
+            <h1 className="mt-1 font-serif text-3xl font-bold">관리자</h1>
           </div>
           {admin && passwordConfigured() && (
             <form action={logout}>
@@ -34,6 +35,12 @@ export default async function ManagePage() {
             </form>
           )}
         </div>
+
+        {admin && (
+          <div className="mt-8">
+            <StatsPanel />
+          </div>
+        )}
 
         {!admin ? (
           <LoginForm />
